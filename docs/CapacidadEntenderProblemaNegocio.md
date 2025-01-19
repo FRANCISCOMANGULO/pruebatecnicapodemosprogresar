@@ -1,100 +1,93 @@
-# Diseño del Esquema Dimensional
+# Sistema de Predicción de Mareas
 
-## 1. Tabla de Hechos: FACT_EVENTOS_LUNARES
+## 1. Flujo de Predicción
 
-### Descripción
+### A. Recolección de Datos
 
-Almacena todos los eventos lunares registrados con sus métricas y referencias a dimensiones.
+1. **Datos Lunares**
+   * Fase lunar
+   * Distancia Tierra-Luna
+   * Posición orbital
+   * Ángulo de inclinación
+2. **Datos de Marea**
+   * Altura histórica
+   * Velocidad de cambio
+   * Temperaturas
+   * Condiciones meteorológicas
 
-### Columnas
+### B. Modelo de Predicción
 
-* **event_id** : Identificador único del evento (PK)
-* **tiempo_id** : Referencia a la dimensión tiempo (FK)
-* **ubicacion_id** : Referencia a la dimensión ubicación (FK)
-* **tipo_detalle_id** : Referencia a la dimensión de tipo y detalles (FK)
-* **intensidad_lunar** : Medida de la intensidad del evento lunar
-* **duracion_minutos** : Duración del evento en minutos
-* **altura_grados** : Altura en grados sobre el horizonte
-* **fase_lunar** : Fase lunar en el momento del evento
+<pre><div class="relative flex flex-col rounded-lg"><div class="text-text-300 absolute pl-3 pt-2.5 text-xs">python</div><div class="pointer-events-none sticky my-0.5 ml-0.5 flex items-center justify-end px-1.5 py-1 mix-blend-luminosity top-0"><div class="from-bg-300/90 to-bg-300/70 pointer-events-auto rounded-md bg-gradient-to-b p-0.5 backdrop-blur-md"><button class="flex flex-row items-center gap-1 rounded-md p-1 py-0.5 text-xs transition-opacity delay-100 hover:bg-bg-200 opacity-60 hover:opacity-100"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256" class="text-text-500 mr-px -translate-y-[0.5px]"><path d="M200,32H163.74a47.92,47.92,0,0,0-71.48,0H56A16,16,0,0,0,40,48V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm-72,0a32,32,0,0,1,32,32H96A32,32,0,0,1,128,32Zm72,184H56V48H82.75A47.93,47.93,0,0,0,80,64v8a8,8,0,0,0,8,8h80a8,8,0,0,0,8-8V64a47.93,47.93,0,0,0-2.75-16H200Z"></path></svg><span class="text-text-200 pr-0.5">Copy</span></button></div></div><div><div class="code-block__code !my-0 !rounded-lg !text-sm !leading-relaxed"><code class="language-python"><span><span class="token">def</span><span></span><span class="token">predecir_marea</span><span class="token">(</span><span>datos_lunares</span><span class="token">,</span><span> datos_historicos</span><span class="token">)</span><span class="token">:</span><span>
+</span></span><span><span></span><span class="token"># Características del modelo</span><span>
+</span></span><span><span>    features </span><span class="token">=</span><span></span><span class="token">[</span><span>
+</span></span><span><span></span><span class="token">'fase_lunar'</span><span class="token">,</span><span>
+</span></span><span><span></span><span class="token">'distancia_lunar'</span><span class="token">,</span><span>
+</span></span><span><span></span><span class="token">'angulo_orbital'</span><span class="token">,</span><span>
+</span></span><span><span></span><span class="token">'temperatura_agua'</span><span class="token">,</span><span>
+</span></span><span><span></span><span class="token">'viento'</span><span class="token">,</span><span>
+</span></span><span><span></span><span class="token">'presion_atmosferica'</span><span>
+</span></span><span><span></span><span class="token">]</span><span>
+</span></span><span>  
+</span><span><span></span><span class="token"># Modelo de predicción</span><span>
+</span></span><span><span></span><span class="token">return</span><span></span><span class="token">{</span><span>
+</span></span><span><span></span><span class="token">'altura_marea'</span><span class="token">:</span><span> altura_predicha</span><span class="token">,</span><span>
+</span></span><span><span></span><span class="token">'hora_pico'</span><span class="token">:</span><span> hora_pico</span><span class="token">,</span><span>
+</span></span><span><span></span><span class="token">'nivel_riesgo'</span><span class="token">:</span><span> calcular_riesgo</span><span class="token">(</span><span>altura_predicha</span><span class="token">)</span><span>
+</span></span><span><span></span><span class="token">}</span></span></code></div></div></div></pre>
 
-## 2. Dimensiones
+### C. Sistema de Alertas
 
-### DIM_TIEMPO
+1. **Niveles de Riesgo**
+   * BAJO: < 2 metros
+   * MEDIO: 2-3 metros
+   * ALTO: > 3 metros
+   * CRÍTICO: > 4 metros
+2. **Factores de Alerta**
+   * Altura de marea
+   * Velocidad de cambio
+   * Condiciones meteorológicas
+   * Horario de operaciones
 
-Dimensión que captura todos los aspectos temporales del evento.
+## 2. Reporte de Alertas
 
-#### Columnas
+### Reporte Diario
 
-* **tiempo_id** : Identificador único (PK)
-* **fecha** : Fecha completa del evento
-* **anio** : Año del evento
-* **mes** : Mes del evento
-* **dia** : Día del evento
-* **nombre_mes** : Nombre del mes
-* **trimestre** : Trimestre del año
-* **es_fin_semana** : Indicador de fin de semana
-* **temporada** : Temporada del año
+<pre><div class="relative flex flex-col rounded-lg"><div class="text-text-300 absolute pl-3 pt-2.5 text-xs">sql</div><div class="pointer-events-none sticky my-0.5 ml-0.5 flex items-center justify-end px-1.5 py-1 mix-blend-luminosity top-0"><div class="from-bg-300/90 to-bg-300/70 pointer-events-auto rounded-md bg-gradient-to-b p-0.5 backdrop-blur-md"><button class="flex flex-row items-center gap-1 rounded-md p-1 py-0.5 text-xs transition-opacity delay-100 hover:bg-bg-200 opacity-60 hover:opacity-100"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256" class="text-text-500 mr-px -translate-y-[0.5px]"><path d="M200,32H163.74a47.92,47.92,0,0,0-71.48,0H56A16,16,0,0,0,40,48V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm-72,0a32,32,0,0,1,32,32H96A32,32,0,0,1,128,32Zm72,184H56V48H82.75A47.93,47.93,0,0,0,80,64v8a8,8,0,0,0,8,8h80a8,8,0,0,0,8-8V64a47.93,47.93,0,0,0-2.75-16H200Z"></path></svg><span class="text-text-200 pr-0.5">Copy</span></button></div></div><div><div class="code-block__code !my-0 !rounded-lg !text-sm !leading-relaxed"><code class="language-sql"><span><span class="token">SELECT</span><span> 
+</span></span><span><span>    fecha</span><span class="token">,</span><span>
+</span></span><span><span>    hora</span><span class="token">,</span><span>
+</span></span><span><span>    altura_marea</span><span class="token">,</span><span>
+</span></span><span><span>    nivel_riesgo</span><span class="token">,</span><span>
+</span></span><span>    recomendacion_operativa
+</span><span><span></span><span class="token">FROM</span><span> predicciones_marea
+</span></span><span><span></span><span class="token">WHERE</span><span> fecha </span><span class="token">=</span><span></span><span class="token">CURRENT_DATE</span><span>
+</span></span><span><span></span><span class="token">ORDER</span><span></span><span class="token">BY</span><span> hora</span><span class="token">;</span></span></code></div></div></div></pre>
 
-### DIM_UBICACION
+### Alertas Automáticas
 
-Dimensión que captura la información geográfica del evento.
+1. **Email/SMS para** :
 
-#### Columnas
+* Altura crítica > 4m
+* Cambio rápido > 0.5m/hora
+* Condiciones combinadas de riesgo
 
-* **ubicacion_id** : Identificador único (PK)
-* **continente** : Continente donde ocurrió el evento
-* **pais** : País del evento
-* **region** : Región específica
-* **latitud** : Coordenada latitud
-* **longitud** : Coordenada longitud
-* **zona_horaria** : Zona horaria de la ubicación
-* **hemisferio** : Hemisferio (Norte/Sur)
+1. **Dashboard Operativo**
+   * Predicción 24 horas
+   * Indicadores en tiempo real
+   * Histórico de alertas
+   * Mapa de zonas afectadas
 
-### DIM_TIPO_DETALLE
+## 3. Implementación
 
-Dimensión que almacena los detalles y características del evento.
+### Infraestructura
 
-#### Columnas
+1. Base de datos en tiempo real
+2. Sistema de monitoreo 24/7
+3. APIs de integración
+4. Backup y redundancia
 
-* **tipo_detalle_id** : Identificador único (PK)
-* **tipo_evento** : Tipo principal del evento
-* **subtipo** : Subtipo específico
-* **categoria** : Categorización adicional
-* **nivel_visibilidad** : Nivel de visibilidad del evento
-* **condiciones_optimas** : Condiciones óptimas para observación
-* **descripcion** : Descripción detallada
+### Procedimientos Operativos
 
-## 3. Justificación del Diseño
-
-### Granularidad
-
-* La tabla de hechos registra cada evento lunar individual
-* Permite análisis detallado por evento
-* Soporta agregaciones a diferentes niveles
-
-### Ventajas del Diseño
-
-1. **Flexibilidad en Análisis**
-   * Permite análisis por tiempo, ubicación y tipo de evento
-   * Soporta drill-down y roll-up en múltiples dimensiones
-2. **Optimización de Consultas**
-   * Esquema en estrella para mejor rendimiento
-   * Dimensiones desnormalizadas para reducir JOINs
-3. **Escalabilidad**
-   * Diseño preparado para crecimiento futuro
-   * Soporte para nuevos tipos de eventos
-4. **Facilidad de Uso**
-   * Estructura intuitiva para analistas
-   * Dimensiones con atributos descriptivos claros
-
-## 4. Uso para Análisis
-
-### Ejemplos de Análisis Soportados
-
-1. Patrones temporales de eventos lunares
-2. Distribución geográfica de eventos
-3. Correlación entre tipos de eventos y ubicaciones
-4. Análisis de estacionalidad
-5. Tendencias por región y periodo
-
-![Esquema Dimensional](../docs/tabladimensional.png)
+1. Protocolos por nivel de riesgo
+2. Cadena de comunicación
+3. Medidas preventivas
+4. Plan de contingencia
