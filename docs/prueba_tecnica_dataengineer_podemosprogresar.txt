@@ -1,0 +1,189 @@
+:::::::::   ::::::::  :::::::::  :::::::::: ::::    ::::   ::::::::   ::::::::   :::::::::  :::::::::   ::::::::   ::::::::  :::::::::  ::::::::::  ::::::::      :::     :::::::::  
+:+:    :+: :+:    :+: :+:    :+: :+:        +:+:+: :+:+:+ :+:    :+: :+:    :+:  :+:    :+: :+:    :+: :+:    :+: :+:    :+: :+:    :+: :+:        :+:    :+:   :+: :+:   :+:    :+: 
++:+    +:+ +:+    +:+ +:+    +:+ +:+        +:+ +:+:+ +:+ +:+    +:+ +:+         +:+    +:+ +:+    +:+ +:+    +:+ +:+        +:+    +:+ +:+        +:+         +:+   +:+  +:+    +:+ 
++#++:++#+  +#+    +:+ +#+    +:+ +#++:++#   +#+  +:+  +#+ +#+    +:+ +#++:++#++  +#++:++#+  +#++:++#:  +#+    +:+ :#:        +#++:++#:  +#++:++#   +#++:++#++ +#++:++#++: +#++:++#:  
++#+        +#+    +#+ +#+    +#+ +#+        +#+       +#+ +#+    +#+        +#+  +#+        +#+    +#+ +#+    +#+ +#+   +#+# +#+    +#+ +#+               +#+ +#+     +#+ +#+    +#+ 
+#+#        #+#    #+# #+#    #+# #+#        #+#       #+# #+#    #+# #+#    #+#  #+#        #+#    #+# #+#    #+# #+#    #+# #+#    #+# #+#        #+#    #+# #+#     #+# #+#    #+# 
+###         ########  #########  ########## ###       ###  ########   ########   ###        ###    ###  ########   ########  ###    ### ##########  ########  ###     ### ###    ### 
+
+
+
+Prueba Técnica para Ingenier@ de Datos en Podemos Progresar
+Fecha maxima de entrega: Domingo 19 de Enero a las 23:59 hrs.
+
+Objetivo
+Evaluar la capacidad del candidato para:
+1. Procesar y transformar grandes volúmenes de datos utilizando Spark/PySpark.
+2. Diseñar un esquema dimensional optimizado para análisis en un DataMart.
+3. Implementar buenas prácticas de desarrollo colaborativo utilizando Git, incluyendo el manejo de branches y merge requests (MR).
+4. Resolver ejercicios prácticos aplicados a escenarios reales con ejemplos de código.
+5. Entender y resolver problemas de negocio relacionados con los datos.
+
+---
+
+Descripción de la Prueba
+
+Parte 1: Simulación y Procesamiento con PySpark
+1. Simulación de Datos:
+   - Crear un dataset simulado con un tamaño equivalente a 50 GB utilizando código en PySpark.
+   - Incluir las siguientes columnas:
+     - event_id (UUID único del evento).
+     - event_type (tipo de evento: lunar, solar, asteroid, etc.).
+     - timestamp (fecha y hora del evento).
+     - location (coordenadas o región ficticia).
+     - details (descripción breve del evento).
+
+2. Tareas de Procesamiento:
+   - Filtrar datos relevantes, extrayendo únicamente eventos de tipo lunar.
+   - Crear una nueva columna year a partir de timestamp.
+   - Agrupar los datos por año y calcular el total de eventos lunares.
+   - Guardar los datos procesados en formato Parquet en una carpeta llamada datamart/.
+
+---
+
+Parte 2: Diseño del Esquema Dimensional
+1. Esquema de Datos:
+   - Diseñar un esquema dimensional con:
+     - Una tabla de hechos para eventos lunares.
+     - Al menos dos tablas de dimensiones relacionadas con detalles del evento y ubicación.
+   - Justificar el diseño y explicar cómo soporta análisis eficientes.
+
+2. Documentación Técnica:
+   - Crear un archivo README que incluya:
+     - Explicación del flujo de datos desde la simulación hasta el DataMart.
+     - Justificación del diseño del esquema dimensional.
+     - Herramientas propuestas para una implementación en producción (Airflow, Databricks, etc.).
+
+---
+
+Parte 3: Uso de Git y Gestión de Branches
+1. Repositorio en GitHub:
+   - Crear un repositorio público en GitHub para subir el proyecto.
+   - Configurar una estructura clara de directorios:
+     ```
+     ├── src/               # Código fuente
+     ├── data/              # Datos simulados y procesados
+     ├── datamart/          # Salida de datos en formato Parquet
+     ├── docs/              # Documentación y diagramas
+     └── README.md          # Instrucciones y justificación técnica
+     ```
+
+2. Branches y Merge Requests (MR):
+   - Crear al menos tres branches con tareas específicas:
+     - feature/simulate-data: Para el código de simulación.
+     - feature/process-data: Para el procesamiento de datos con PySpark.
+     - feature/datamart-design: Para el diseño del esquema dimensional y documentación.
+   - Realizar un merge request por cada branch al branch principal (main) con una descripción clara de los cambios realizados.
+   - Documentar el flujo en el archivo README.md.
+
+---
+
+Parte 4: Ejercicios Prácticos
+
+Spark/PySpark
+1. Filtrar eventos lunares y solares de los últimos dos años. Proporcione el código:
+   ```
+   df = spark.read.csv("/data/events.csv", header=True)
+   filtered_df = df.filter((df["event_type"].isin("lunar", "solar")) & (df["year"] >= 2023))
+   filtered_df.show()
+   ```
+
+2. Agrupar eventos por tipo y calcular la media de eventos por año.
+
+3. Implementar un join utilizando broadcast para relacionar un dataset de eventos con uno de ubicaciones pequeñas.
+
+4. Escribir los datos procesados en formato Parquet con particionamiento por año y ubicación.
+
+5. Leer un CSV con datos corruptos y manejar los errores. Ejemplo:
+   ```
+   df = spark.read.option("mode", "DROPMALFORMED").csv("/data/corrupted_events.csv")
+   df.show()
+   ```
+
+6. Calcular la duración promedio de eventos por tipo.
+
+7. Diseñar un pipeline que procese datos de manera incremental.
+
+8. Ajustar configuraciones de Spark para manejar errores de memoria en el procesamiento de 50 GB.
+
+9. Comparar el uso de cache vs persist en una operación de agregación.
+
+10. Optimizar un flujo PySpark con particionamiento adecuado.
+
+SQL y Modelado de Datos
+1. Escribir una consulta para obtener eventos lunares por ubicación:
+   ```
+   SELECT location, COUNT(*) AS event_count
+   FROM fact_events
+   WHERE event_type = 'lunar'
+   GROUP BY location;
+   ```
+
+2. Identificar problemas en el siguiente esquema estrella y proponer mejoras:
+   ```
+   fact_events (event_id, event_type_id, timestamp_id, location_id, details)
+   dim_event_type (event_type_id, event_name)
+   dim_timestamp (timestamp_id, year, month, day)
+   dim_location (location_id, location_name, coordinates)
+   ```
+
+3. Escribir una consulta para calcular el rango de eventos entre años.
+
+4. Crear índices para mejorar el rendimiento de consultas en tablas dimensionales.
+
+5. Diseñar una tabla que audite cambios en la tabla de hechos.
+
+6. Calcular promedios de eventos por año y ubicación.
+
+7. Relacionar dimensiones de tiempo y ubicación en un esquema Snowflake.
+
+8. Diseñar una consulta que identifique picos de eventos lunares por trimestre.
+
+9. Ajustar una consulta SQL para evitar escaneos completos de tabla.
+
+10. Proponer una estrategia para manejar datos históricos en un esquema dimensional.
+
+---
+
+Parte 5: Capacidad de Entender el Problema de Negocio
+
+Situación 1:
+Un cliente interno tiene la hipótesis de que conocer la ruta de la luna podría incrementar las ventas. Tu tarea es:
+1. Diseñar un flujo de análisis que permita relacionar eventos lunares con tendencias de ventas.
+2. Proponer métricas clave que respalden o refuten la hipótesis.
+
+Situación 2:
+Otro cliente interno menciona que conocer la altura de la marea en base a eventos lunares ayudará a reducir el riesgo de operaciones comerciales en la playa. Tu tarea es:
+1. Diseñar un flujo para predecir la altura de la marea usando eventos lunares.
+2. Proponer un reporte para alertar de riesgos potenciales basados en la altura de la marea.
+
+---
+
+Entregables
+1. Repositorio Público en GitHub:
+   - Código completo subido al repositorio.
+   - Uso claro de branches y merge requests.
+
+2. Código PySpark:
+   - Script para simulación y procesamiento.
+
+3. Consultas SQL:
+   - Archivo con consultas para análisis.
+
+4. Respuestas a Preguntas Técnicas:
+   - Documento con las respuestas detalladas.
+
+5. Respuestas a Situaciones de Negocio:
+   - Propuestas de flujos de análisis y métricas clave.
+
+---
+
+Criterios de Evaluación
+1. Calidad del Código:
+   - Eficiencia, legibilidad y uso de buenas prácticas en PySpark.
+2. Gestión con Git:
+   - Uso adecuado de branches y merge requests.
+3. Resolución de Ejercicios Prácticos:
+   - Claridad y exactitud de las soluciones con ejemplos funcionales.
+4. Entendimiento del Negocio:
+   - Claridad y relevancia en las respuestas a situaciones hipotéticas.
